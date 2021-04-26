@@ -1,0 +1,151 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>FIR_Low_Pass_Filter</title><meta name="generator" content="MATLAB 9.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-04-26"><meta name="DC.source" content="FIR_Low_Pass_Filter.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><pre class="codeinput">f1=100;f2=200;<span class="comment">%the frequencies of sines signal that needs filtered</span>
+fs=2000;<span class="comment">%sampling frequency</span>
+m=(0.3*f1)/(fs/2);<span class="comment">%define tansition bandwidth</span>
+M=round(8/m);<span class="comment">%define the window length</span>
+N=M-1;<span class="comment">%define the order of filter</span>
+b=fir1(N,0.5*f2/(fs/2));<span class="comment">%use the firl function to design a filter</span>
+<span class="comment">%Input parameters are respectively the order number and the cutoff</span>
+<span class="comment">%frequency of filter</span>
+
+figure(1)
+[h,f]=freqz(b,1,512);<span class="comment">%amplitude-frequency characteristic graph</span>
+plot(f*fs/(2*pi),20*log10(abs(h)))<span class="comment">%parameters are respectively frequency and amplitude</span>
+xlabel(<span class="string">'frequency/Hz'</span>);ylabel(<span class="string">'gain/dB'</span>);title(<span class="string">'The gain response of lowpass filter'</span>);
+figure(2)
+subplot(211)
+t=0:1/fs:0.2;<span class="comment">%define the time domain and the steplength</span>
+s=sin(2*pi*f1*t)+sin(2*pi*f2*t);<span class="comment">%signal before filtering</span>
+plot(t,s);<span class="comment">%plot the signal graph before filtering</span>
+xlabel(<span class="string">'time/s'</span>);ylabel(<span class="string">'amplitude'</span>);title(<span class="string">'Time-domain diagram before filtering'</span>);
+axis([0 0.1 -2 2]);
+subplot(212)
+Fs=fft(s,512);<span class="comment">%transform the signal to frequency domain</span>
+AFs=abs(Fs);<span class="comment">%take the amplitude</span>
+f=(0:255)*fs/512;<span class="comment">%frequency sampling</span>
+plot(f,AFs(1:256));<span class="comment">%plot the frequency domain diagram before filtering</span>
+xlabel(<span class="string">'frequency/Hz'</span>);ylabel(<span class="string">'amplitude'</span>);title(<span class="string">'Frequency-domain diagram before filtering'</span>);
+
+figure(3)
+sf=filter(b,1,s);<span class="comment">%use filter function to filter</span>
+subplot(211)
+plot(t,sf)<span class="comment">%plot the signal graph after filtering</span>
+xlabel(<span class="string">'time/s'</span>);ylabel(<span class="string">'amplitude'</span>);title(<span class="string">'Time-domain diagram after filtering'</span>);
+axis([0.1 0.2 -2 2]);
+subplot(212)
+Fsf=fft(sf,512);<span class="comment">%frequency-domain diagram after filtering</span>
+AFsf=abs(Fsf);<span class="comment">%the amplitude</span>
+f=(0:255)*fs/512;<span class="comment">%frequency sampling</span>
+plot(f,AFsf(1:256))<span class="comment">%plot the frequency domain diagram after filtering</span>
+xlabel(<span class="string">'frequency/Hz'</span>);ylabel(<span class="string">'amplitude'</span>);title(<span class="string">'Frequency-domain diagram after filtering'</span>);
+</pre><img vspace="5" hspace="5" src="FIR_Low_Pass_Filter_01.png" alt=""> <img vspace="5" hspace="5" src="FIR_Low_Pass_Filter_02.png" alt=""> <img vspace="5" hspace="5" src="FIR_Low_Pass_Filter_03.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+f1=100;f2=200;%the frequencies of sines signal that needs filtered
+fs=2000;%sampling frequency
+m=(0.3*f1)/(fs/2);%define tansition bandwidth
+M=round(8/m);%define the window length
+N=M-1;%define the order of filter
+b=fir1(N,0.5*f2/(fs/2));%use the firl function to design a filter
+%Input parameters are respectively the order number and the cutoff
+%frequency of filter
+
+figure(1)
+[h,f]=freqz(b,1,512);%amplitude-frequency characteristic graph
+plot(f*fs/(2*pi),20*log10(abs(h)))%parameters are respectively frequency and amplitude
+xlabel('frequency/Hz');ylabel('gain/dB');title('The gain response of lowpass filter');
+figure(2)
+subplot(211)
+t=0:1/fs:0.2;%define the time domain and the steplength
+s=sin(2*pi*f1*t)+sin(2*pi*f2*t);%signal before filtering
+plot(t,s);%plot the signal graph before filtering
+xlabel('time/s');ylabel('amplitude');title('Time-domain diagram before filtering');
+axis([0 0.1 -2 2]);
+subplot(212)
+Fs=fft(s,512);%transform the signal to frequency domain
+AFs=abs(Fs);%take the amplitude
+f=(0:255)*fs/512;%frequency sampling
+plot(f,AFs(1:256));%plot the frequency domain diagram before filtering
+xlabel('frequency/Hz');ylabel('amplitude');title('Frequency-domain diagram before filtering');
+
+figure(3)
+sf=filter(b,1,s);%use filter function to filter
+subplot(211)
+plot(t,sf)%plot the signal graph after filtering
+xlabel('time/s');ylabel('amplitude');title('Time-domain diagram after filtering');
+axis([0.1 0.2 -2 2]);
+subplot(212)
+Fsf=fft(sf,512);%frequency-domain diagram after filtering
+AFsf=abs(Fsf);%the amplitude
+f=(0:255)*fs/512;%frequency sampling
+plot(f,AFsf(1:256))%plot the frequency domain diagram after filtering
+xlabel('frequency/Hz');ylabel('amplitude');title('Frequency-domain diagram after filtering');
+
+##### SOURCE END #####
+--></body></html>
